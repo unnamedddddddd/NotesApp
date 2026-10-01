@@ -1,5 +1,14 @@
 {
   "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/core/*"],
+      "@stores/*": ["./src/core/stores/*"],
+      "@screens/*": ["./src/core/screens/*"],
+      "@components/*": ["./src/core/components/*"],
+      "@types/*": ["./src/core/types/*"]
+    }
+  },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/node_modules", "**/Pods"]
 }
