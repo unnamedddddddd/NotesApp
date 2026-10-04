@@ -11,7 +11,7 @@ class AuthStore {
   }
 
   async restore() {
-    const saved = await AsyncStorage.getItem('session');
+    const saved = await AsyncStorage.getItem('session');    
     runInAction(() => {
       this.user = saved;
       this.isReady = true;
@@ -30,7 +30,7 @@ class AuthStore {
   async login(login: string, password: string) {
     const users = JSON.parse((await AsyncStorage.getItem('users')) ?? '{}');
     if (users[login] !== password) throw new Error('Неверный логин или пароль');
-
+    
     await AsyncStorage.setItem('session', login);
     runInAction(() => {
       this.user = login;

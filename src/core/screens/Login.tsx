@@ -3,14 +3,14 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/navigation/types";
 import { FileText, Lock, User } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authStore } from "@/stores/authStores";
+import { showError } from "@/utilits/showError";
 
 
 const Login = () => {
   const [userLogin, setUserLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { login } = authStore;
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -20,18 +20,13 @@ const Login = () => {
         throw new Error('Поля обязательны');
       }
 
-      await login(userLogin, password);
-      navigation.navigate('Notes');
+      authStore.login(userLogin, password);
     } catch (error) {
       showError(error);
     }
   }
 
-  const showError = (error: unknown) => {
-    const msg = error instanceof Error ? error.message : 'Что-то пошло не так';
-    ToastAndroid.show(msg, ToastAndroid.SHORT);
-    console.error(error);
-  };
+
 
   return (
     <View style={styles.main}>

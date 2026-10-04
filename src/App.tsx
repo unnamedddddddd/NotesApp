@@ -1,30 +1,41 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { observer } from 'mobx-react-lite';                  
 import { authStore } from '@/stores/authStores';
 import Notes from '@/screens/Notes';
 import Login from '@/screens/Login';
 import Register from '@/screens/Register';
+import NoteEdit from '@/screens/NoteEdit';
 
-function App() {
+const Stack = createNativeStackNavigator();
+
+const App = observer(() => {                                 
   const { user } = authStore;
-  const Stack = createNativeStackNavigator();
+
+  useEffect(() => { 
+    authStore.restore();
+  }, []);
+
+  
   return (
-   <NavigationContainer>
-    <Stack.Navigator>
-      {user ? (
-        <Stack.Screen name="Notes" component={Notes} options={{ headerShown: false }}/>
-      ) : (
-        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      )}
-
-      <Stack.Screen name='Register' component={Register} options={{ headerShown: false }}/>
-      <Stack.Screen name='Notes' component={Notes} options={{ headerShown: false }}/>
-
-    </Stack.Navigator>
-  </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {user ? (
+          <>
+            <Stack.Screen name="Notes" component={Notes} />
+            <Stack.Screen name="NoteEdit" component={NoteEdit} />
+          </>
+          
+        ) : (
+          <>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+});
 
 export default App;

@@ -1,11 +1,10 @@
-import { Note } from "@/types/Note";
+import { NoteProps } from "@/types/NoteProps";
 import { makeAutoObservable, runInAction } from "mobx";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-export type Status = 'new' | 'progress' | 'done';
+import { StatusType } from "@/types/StatusType";
 
 class NotesStore {
-  notes: Note[] = [];
+  notes: NoteProps[] = [];
   private owner: string | null = null;
 
   constructor() {
@@ -21,8 +20,8 @@ class NotesStore {
     });
   }
 
-  private async persist() {
-    if (this.owner) {
+  private async persist() {    
+    if (this.owner) {      
       await AsyncStorage.setItem(`notes:${this.owner}`, JSON.stringify(this.notes));
     }
   }
@@ -31,7 +30,7 @@ class NotesStore {
     return this.notes.find(note => note.id === id);
   }
 
-  async save(id: string |  undefined, text: string,  status: Status) {
+  async save( title: string, text: string, status: StatusType, id?: string |  undefined,) {
     if (id) {
       const note = this.get(id);
       if (note) {
@@ -43,6 +42,7 @@ class NotesStore {
       this.notes.unshift({
         id: String(Date.now()),
         text,
+        title,
         updatedAt: Date.now(),
         status
       });

@@ -1,8 +1,9 @@
 import { RootStackParamList } from "@/navigation/types";
 import { authStore } from "@/stores/authStores";
+import { showError } from "@/utilits/showError";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Lock, ShieldCheck, ShieldLock, User } from "lucide-react-native";
+import { Lock, ShieldCheck, User } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native";
 
@@ -49,13 +50,6 @@ const Register = () => {
       message: 'Все ок',
     }
   }
-
-  
-  const showError = (error: unknown) => {
-    const msg = error instanceof Error ? error.message : 'Что-то пошло не так';
-    ToastAndroid.show(msg, ToastAndroid.SHORT);
-    console.error(error);
-  };
 
   return (
     <View style={styles.main}>
@@ -124,7 +118,7 @@ const Register = () => {
             Уже есть аккаунт?
           </Text>
           <Pressable
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.goBack()}
           >
             <Text style={styles.link}>Войти в аккаунт</Text>
           </Pressable>
