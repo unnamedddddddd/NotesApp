@@ -36,7 +36,7 @@ const SearchBar = ({ onSearch, onChangeSortType }: SearchBarProps) => {
       <TextInput
         ref={inputRef}
         style={styles.input}
-        onChangeText={onSearch}
+        onChangeText={(text) => onSearch(text)}
         placeholderTextColor="#898781"
         placeholder='Поиск по названию...'
       />

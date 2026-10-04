@@ -24,7 +24,7 @@ export const STATUS_CONFIG: Record<NoteProps['status'], StatusStyle> = {
     bg: '#311a00',
   },
   completed: {
-    label: 'Готово',
+    label: 'Выполнена',
     color: '#0ca30c',
     bg: '#11260f',
   },
