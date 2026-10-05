@@ -9,13 +9,15 @@ import { observer } from "mobx-react-lite";
 import { notesStore } from "@/stores/notesStore";
 import { showError } from "@/utilits/showError";
 import { StatusType } from "@/types/StatusType";
+import Tab from "@/components/Tab";
+import getRelativeDateString from "@/utilits/getRelativeDareString";
 
-type Tab = {
+type TabItem = {
   value: StatusType;
   label: string;
 };
 
-const TABS: Tab[] = [
+const TABS: TabItem[] = [
   { value: 'new', label: 'Новые' },
   { value: 'wip', label: 'В работе' },
   { value: 'completed', label: 'Выполнена' },
@@ -29,10 +31,7 @@ const NoteEdit = observer(() => {
   const [status, setStatus] = useState<StatusType>('new');
   const [textNote, setTextNote] = useState<string>('');
   const [titleNote, setTitleNote] = useState<string>('');
-
-  const handleChangeSort = (status: StatusType) => {
-    setStatus(status);
-  }
+  const [updateAtNote, setUpdateAtNote] = useState<number>(0);
 
   const saveNote = async () => {
     try {
@@ -54,6 +53,7 @@ const NoteEdit = observer(() => {
         setStatus(note?.status);
         setTextNote(note?.text);
         setTitleNote(note?.title);
+        setUpdateAtNote(note?.updatedAt);
       }
     }
   }, [])
@@ -103,15 +103,12 @@ const NoteEdit = observer(() => {
         </Text>
         <View style={styles.statusContainer}>
           {TABS.map(({ value, label }) => (
-            <Pressable
+            <Tab
               key={value}
-              onPress={() => handleChangeSort(value)}
-              style={[styles.tab, status === value && styles.tabActive]}
-            >
-              <Text style={[styles.text, status === value && styles.textActive]}>
-                {label}
-              </Text>
-            </Pressable>
+              label={label}
+              active={status === value}
+              onPress={() => setStatus(value)}
+            />
           ))}
         </View>
       </View>
@@ -133,6 +130,15 @@ const NoteEdit = observer(() => {
           multiline
         />
       </View>
+
+      {noteId && (
+        <View style={styles.updateAtText}>
+          <Text style={{ color: '#898781', fontSize: 15 }}>
+            Заметка была обновлена {getRelativeDateString(updateAtNote).label} в {getRelativeDateString(updateAtNote).time}
+          </Text>
+        </View>
+      )}
+
     </SafeAreaView>
   );
 
@@ -210,7 +216,12 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     textAlignVertical: 'top',
-  }
+  },
 
+  updateAtText: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5,
+  }
 
 });
